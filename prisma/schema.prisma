@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Archivo de esquema de Prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -16,7 +15,7 @@ enum RolUsuario {
   ADMIN
 }
 
-// Modelo Personaje con campos en español y referencia a Usuario
+// Modelo Personaje con sus campos y relación con Usuario
 model Personaje {
   id         Int       @id @default(autoincrement())
   nombre     String
@@ -25,7 +24,7 @@ model Personaje {
   origen     String
   tipo       String
   genero     String
-  foto     String
+  foto       String
   url        String
   flag       Boolean   @default(true)
   idUsuario  Int
@@ -34,7 +33,7 @@ model Personaje {
   updatedAt  DateTime  @updatedAt
 }
 
-// Modelo Usuario con rol y relación uno-a-muchos con Personaje
+// Modelo Usuario con rol y relación uno a muchos con Personaje
 model Usuario {
   id         Int        @id @default(autoincrement())
   nombres    String

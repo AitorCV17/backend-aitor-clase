@@ -1,139 +1,109 @@
-import { PrismaClient } from "@prisma/client";
-import { CreatePersonajeDto, UpdatePersonajeDto } from "../validations/dtos/personaje.dto";
-
+import { PrismaClient, Personaje } from "@prisma/client";
 const prisma = new PrismaClient();
 
 /**
- * CREATE
+ * Función para crear un personaje.
+ * Retorna el objeto Personaje o un error si falta algún campo.
  */
-export const createPersonajeSrv = async ({
-  nombre,
-  foto,
-  especie,
-  estado,
-  origen,
-  tipo,
-  genero,
-  url,
-  idUsuario,
-}: CreatePersonajeDto) => {
-  if (!nombre) {
+export const createPersonajeSrv = async (data: {
+  nombre: string;
+  foto: string;
+  especie: string;
+  estado: string;
+  origen: string;
+  tipo: string;
+  genero: string;
+  url: string;
+  idUsuario: number;
+}): Promise<Personaje | { error: string }> => {
+  if (!data.nombre) {
     return { error: "El nombre es requerido" };
   }
-
   const response = await prisma.personaje.create({
     data: {
-      nombre,
-      foto,
-      especie,
-      estado,
-      origen,
-      tipo,
-      genero,
-      url,
-      // En lugar de usar "idUsuario" directamente:
+      nombre: data.nombre,
+      foto: data.foto,
+      especie: data.especie,
+      estado: data.estado,
+      origen: data.origen,
+      tipo: data.tipo,
+      genero: data.genero,
+      url: data.url,
       usuario: {
-        connect: {
-          id: idUsuario
-        }
+        connect: { id: data.idUsuario }
       }
-    },
-  });
-
-  return response;
-};
-
-/**
- * READ LIST
- */
-export const getListaPersonajeSrv = async (idUsuario: number) => {
-  const response = await prisma.personaje.findMany({
-    where: {
-      idUsuario,
-      flag: true,
-    },
-  });
-  return response;
-};
-
-/**
- * READ ONE
- */
-export const getPersonajeSrv = async (id: number, idUsuario: number) => {
-  const response = await prisma.personaje.findFirst({
-    where: {
-      id,
-      flag: true,
-      idUsuario,
-    },
-  });
-  if (!response) {
-    return 404;
-  }
-  return response;
-};
-
-/**
- * DELETE (Soft Delete)
- */
-export const deletePersonajeSrv = async (id: number, idUsuario: number) => {
-  const isExist = await getPersonajeSrv(id, idUsuario);
-  if (isExist === 404) return "No existe personaje";
-
-  const response = await prisma.personaje.update({
-    // Ojo: Este where funciona solo si tienes un índice único o 
-    // un approach que permita filtrar por ambos campos. De lo contrario,
-    // podrías hacer where: { id }, y primero verificar si el personaje 
-    // pertenece al usuario.
-    where: {
-      id,
-      idUsuario
-    },
-    data: {
-      flag: false
     }
   });
   return response;
 };
 
 /**
- * UPDATE
+ * Función para listar los personajes de un usuario (solo los que tienen flag true).
  */
-export const updatePersonajeSrv = async ({
-  id,
-  nombre,
-  foto,
-  especie,
-  estado,
-  origen,
-  tipo,
-  genero,
-  url,
-  idUsuario
-}: UpdatePersonajeDto) => {
-  // Primero verificamos que el personaje exista
-  const isExist = await prisma.personaje.findFirst({
-    where: { id }
+export const getListaPersonajeSrv = async (idUsuario: number): Promise<Personaje[] | null> => {
+  const response = await prisma.personaje.findMany({
+    where: { idUsuario, flag: true },
+    orderBy: { id: "desc" }
   });
-  if (!isExist) return "No existe personaje";
-  if (isExist.idUsuario !== idUsuario) return "No tiene permiso para editar";
+  return response || null;
+};
 
-  // Actualizamos solo los campos que llegan (nombre, foto, etc.)
+/**
+ * Función para obtener un personaje específico.
+ */
+export const getPersonajeSrv = async (id: number, idUsuario: number): Promise<Personaje | 404> => {
+  const response = await prisma.personaje.findFirst({
+    where: { id, idUsuario, flag: true }
+  });
+  if (!response) return 404;
+  return response;
+};
+
+/**
+ * Función para eliminar (soft-delete) un personaje.
+ */
+export const deletePersonajeSrv = async (id: number, idUsuario: number): Promise<Personaje | string> => {
+  const isExist = await prisma.personaje.findFirst({
+    where: { id, idUsuario, flag: true }
+  });
+  if (!isExist) return "El personaje no existe";
   const response = await prisma.personaje.update({
-    // Mismo comentario sobre el where:
-    where: {
-      id,
-      idUsuario
-    },
+    where: { id },
+    data: { flag: false }
+  });
+  return response;
+};
+
+/**
+ * Función para actualizar un personaje.
+ */
+export const updatePersonajeSrv = async (data: {
+  id: number;
+  nombre?: string;
+  foto?: string;
+  especie?: string;
+  estado?: string;
+  origen?: string;
+  tipo?: string;
+  genero?: string;
+  url?: string;
+  idUsuario: number;
+}): Promise<Personaje | string> => {
+  const isExist = await prisma.personaje.findFirst({
+    where: { id: data.id, idUsuario: data.idUsuario, flag: true }
+  });
+  if (!isExist) return "El personaje no existe";
+  const response = await prisma.personaje.update({
+    where: { id: data.id },
     data: {
-      nombre,
-      foto,
-      especie,
-      estado,
-      origen,
-      tipo,
-      genero,
-      url
+      nombre: data.nombre,
+      foto: data.foto,
+      especie: data.especie,
+      estado: data.estado,
+      origen: data.origen,
+      tipo: data.tipo,
+      genero: data.genero,
+      url: data.url
     }
   });
   return response;

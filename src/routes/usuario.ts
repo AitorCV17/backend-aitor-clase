@@ -13,15 +13,23 @@ import { CrearUsuarioDto, ModificarUsuarioDto, GetUsuarioDto } from "../validati
 
 const router = Router();
 
-// Ahora, la creación de usuarios también solo lo puede hacer un ADMIN
+/**
+ * Todas las rutas de usuarios requieren que el usuario autenticado sea ADMIN.
+ */
+
+// Crear un nuevo usuario (solo ADMIN)
 router.post("/", rolRequired(RolUsuario.ADMIN), validateBodyDto(CrearUsuarioDto), createUsuarioCtrl);
 
+// Listar todos los usuarios (solo ADMIN)
 router.get("/list", rolRequired(RolUsuario.ADMIN), getListaUsuarioCtrl);
 
-router.get("/only/:id", validateParamsDto(GetUsuarioDto), rolRequired(RolUsuario.ADMIN), getUsuarioCtrl);
+// Obtener un usuario en particular por su id (solo ADMIN)
+router.get("/only/:id", rolRequired(RolUsuario.ADMIN), validateParamsDto(GetUsuarioDto), getUsuarioCtrl);
 
-router.delete("/:id", validateParamsDto(GetUsuarioDto), rolRequired(RolUsuario.ADMIN), deleteUsuarioCtrl);
-
+// Actualizar un usuario existente (solo ADMIN)
 router.put("/", rolRequired(RolUsuario.ADMIN), validateBodyDto(ModificarUsuarioDto), updateUsuarioCtrl);
+
+// Eliminar un usuario (solo ADMIN)
+router.delete("/:id", rolRequired(RolUsuario.ADMIN), validateParamsDto(GetUsuarioDto), deleteUsuarioCtrl);
 
 export { router };

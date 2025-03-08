@@ -4,22 +4,40 @@ import {
   getListaPersonajeCtrl,
   getPersonajeCtrl,
   deletePersonajeCtrl,
-  updatePersonajeCtrl,
+  updatePersonajeCtrl
 } from "../controllers/personaje.ctrl";
-import { CreatePersonajeDto, GetPersonajeDto, UpdatePersonajeDto } from "../validations/dtos/personaje.dto";
-import { validateBodyDto, validateParamsDto } from "../middlewares/validate-dto";
 import { ValidateSession } from "../middlewares/sesion.md";
 
 const router = Router();
 
-router.post("/", ValidateSession, validateBodyDto(CreatePersonajeDto), createPersonajeCtrl);
-
+/**
+ * Ruta para listar los personajes del usuario autenticado.
+ * Ejemplo: GET http://localhost:3010/personaje/list
+ */
 router.get("/list", ValidateSession, getListaPersonajeCtrl);
 
-router.get("/only/:id", ValidateSession, validateParamsDto(GetPersonajeDto), getPersonajeCtrl);
+/**
+ * Ruta para obtener un personaje específico.
+ * Ejemplo: GET http://localhost:3010/personaje/only/:id
+ */
+router.get("/only/:id", ValidateSession, getPersonajeCtrl);
 
-router.delete("/:id", ValidateSession, validateParamsDto(GetPersonajeDto), deletePersonajeCtrl);
+/**
+ * Ruta para crear un nuevo personaje.
+ * Ejemplo: POST http://localhost:3010/personaje
+ */
+router.post("/", ValidateSession, createPersonajeCtrl);
 
-router.put("/", ValidateSession, validateBodyDto(UpdatePersonajeDto), updatePersonajeCtrl);
+/**
+ * Ruta para actualizar un personaje existente.
+ * Ejemplo: PUT http://localhost:3010/personaje
+ */
+router.put("/", ValidateSession, updatePersonajeCtrl);
+
+/**
+ * Ruta para eliminar (soft-delete) un personaje.
+ * Ejemplo: DELETE http://localhost:3010/personaje/:id
+ */
+router.delete("/:id", ValidateSession, deletePersonajeCtrl);
 
 export { router };

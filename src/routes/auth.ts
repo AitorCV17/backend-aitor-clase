@@ -6,13 +6,14 @@ import { validateBodyDto } from "../middlewares/validate-dto";
 const router = Router();
 
 /**
- * http://localhost:3010/auth/login [POST]
+ * Ruta para el login.
+ * Ejemplo: POST http://localhost:3010/auth/login
  */
 router.post("/login", validateBodyDto(LoginDto), loginCtrl);
 
-
 /**
- * http://localhost:3010/auth/refresh-token [POST]
+ * Ruta para refrescar el token.
+ * Ejemplo: POST http://localhost:3010/auth/refresh-token
  */
 router.post("/refresh-token", validateBodyDto(tokenDto), refreshTokenLimitCtrl);
 

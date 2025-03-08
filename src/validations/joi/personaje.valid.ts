@@ -1,6 +1,9 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
 
+/**
+ * Validación para crear un personaje.
+ */
 export const createPersonajeValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
         const schema = Joi.object({
@@ -9,15 +12,18 @@ export const createPersonajeValidation = (req: Request, res: Response, next: Nex
         });
         const { error } = schema.validate(req.body);
         if (error) {
-            res.status(400).json({ error: error.details[0].message });
-            return; // End the request here, no need to call next()
+            res.status(400).json({ msg: error.details[0].message });
+            return;
         }
-        next(); // Proceed to the next middleware/controller
+        next();
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ msg: "Error interno del servidor" });
     }
 };
 
+/**
+ * Validación para actualizar un personaje.
+ */
 export const updatePersonajeValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
         const schema = Joi.object({
@@ -27,15 +33,18 @@ export const updatePersonajeValidation = (req: Request, res: Response, next: Nex
         });
         const { error } = schema.validate(req.body);
         if (error) {
-            res.status(400).json({ error: error.details[0].message });
+            res.status(400).json({ msg: error.details[0].message });
             return;
         }
         next();
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ msg: "Error interno del servidor" });
     }
 };
 
+/**
+ * Validación para obtener un personaje.
+ */
 export const getPersonajeValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
         const schema = Joi.object({
@@ -43,15 +52,18 @@ export const getPersonajeValidation = (req: Request, res: Response, next: NextFu
         });
         const { error } = schema.validate(req.body);
         if (error) {
-            res.status(400).json({ error: error.details[0].message });
+            res.status(400).json({ msg: error.details[0].message });
             return;
         }
         next();
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ msg: "Error interno del servidor" });
     }
 };
 
+/**
+ * Validación para eliminar un personaje.
+ */
 export const deletePersonajeValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
         const schema = Joi.object({
@@ -59,11 +71,11 @@ export const deletePersonajeValidation = (req: Request, res: Response, next: Nex
         });
         const { error } = schema.validate(req.body);
         if (error) {
-            res.status(400).json({ error: error.details[0].message });
+            res.status(400).json({ msg: error.details[0].message });
             return;
         }
         next();
     } catch (error) {
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ msg: "Error interno del servidor" });
     }
 };

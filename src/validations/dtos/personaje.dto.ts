@@ -1,11 +1,9 @@
 import { Type } from "class-transformer";
-import { 
-  IsString, 
-  IsNumber, 
-  IsOptional, 
-  IsPositive
-} from "class-validator";
+import { IsString, IsNumber, IsOptional, IsPositive } from "class-validator";
 
+/**
+ * DTO para crear un personaje.
+ */
 export class CreatePersonajeDto {
   @IsString()
   nombre: string;
@@ -35,6 +33,9 @@ export class CreatePersonajeDto {
   idUsuario: number;
 }
 
+/**
+ * DTO para actualizar un personaje.
+ */
 export class UpdatePersonajeDto {
   @IsNumber()
   @IsPositive()
@@ -77,6 +78,9 @@ export class UpdatePersonajeDto {
   idUsuario: number;
 }
 
+/**
+ * DTO para obtener un personaje por id.
+ */
 export class GetPersonajeDto {
   @IsNumber()
   @IsPositive()

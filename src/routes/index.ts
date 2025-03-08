@@ -1,21 +1,21 @@
 import { Router } from "express";
-import { readdirSync } from "fs"; //paquete para leer directorios
+import { readdirSync } from "fs"; // Para leer directorios
 
-const PATH_ROUTER = `${__dirname}`; //Directorio actual
+const PATH_ROUTER = `${__dirname}`; // Directorio actual
 const router = Router();
 
-const cleanFileName = (fileName: String) => {
-  const file = fileName.split(".").shift();
-  return file;
-};
+/**
+ * Se leen todas las rutas (excepto index.ts) y se importan dinámicamente.
+ */
+const cleanFileName = (fileName: string) => fileName.split(".").shift();
 
 readdirSync(PATH_ROUTER).filter((filename) => {
   const cleanName = cleanFileName(filename);
   if (cleanName !== "index") {
     import(`./${cleanName}`).then((moduleRouter) => {
-      //console.log(`Se esta cargando la ruta ... /${cleanName}`);
       router.use(`/${cleanName}`, moduleRouter.router);
     });
   }
 });
+
 export { router };

@@ -1,7 +1,9 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsNegative, IsNumber, IsPositive, IsString } from "class-validator";
-// import { number } from "joi";
+import { IsEmail, IsNumber, IsPositive, IsString } from "class-validator";
 
+/**
+ * DTO para crear un usuario.
+ */
 export class CrearUsuarioDto {
     @IsEmail()
     email: string;
@@ -13,8 +15,10 @@ export class CrearUsuarioDto {
     nombres: string;
 }
 
+/**
+ * DTO para modificar un usuario.
+ */
 export class ModificarUsuarioDto {
-
     @IsNumber()
     @IsPositive()
     id: number;
@@ -29,6 +33,9 @@ export class ModificarUsuarioDto {
     nombres: string;
 }
 
+/**
+ * DTO para obtener un usuario por id.
+ */
 export class GetUsuarioDto {
     @IsNumber()
     @IsPositive()
