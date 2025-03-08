@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enumeración para roles de usuario
+enum RolUsuario {
+  REGULAR
+  ADMIN
+}
+
+// Modelo Personaje con campos en español y referencia a Usuario
+model Personaje {
+  id         Int       @id @default(autoincrement())
+  nombre     String
+  especie    String
+  estado     String
+  origen     String
+  tipo       String
+  genero     String
+  foto     String
+  url        String
+  flag       Boolean   @default(true)
+  idUsuario  Int
+  usuario    Usuario   @relation(fields: [idUsuario], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+// Modelo Usuario con rol y relación uno-a-muchos con Personaje
+model Usuario {
+  id         Int        @id @default(autoincrement())
+  nombres    String
+  email      String     @unique
+  password   String
+  rol        RolUsuario @default(REGULAR)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  Personaje  Personaje[]
+}
