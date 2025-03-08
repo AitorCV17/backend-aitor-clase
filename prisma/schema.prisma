@@ -35,13 +35,13 @@ model Personaje {
 
 // Modelo Usuario con rol y relación uno a muchos con Personaje
 model Usuario {
-  id         Int        @id @default(autoincrement())
-  nombres    String
-  email      String     @unique
-  password   String
-  rol        RolUsuario @default(REGULAR)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id           Int        @id @default(autoincrement())
+  nombres      String
+  correo       String     @unique
+  contraseña   String
+  rol          RolUsuario @default(REGULAR)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
-  Personaje  Personaje[]
+  Personaje    Personaje[]
 }

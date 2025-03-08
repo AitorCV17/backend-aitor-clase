@@ -12,12 +12,12 @@ import { getUsuario } from "./usuario.srv";
 export const refreshTokenLimit = async (token: string) => {
     try {
         const payload = verify(token, process.env.JWT_SECRET || "Tokenprueba", { ignoreExpiration: true }) as any;
-        const { id, email, nombres } = payload;
+        const { id, correo, nombres } = payload;
         const user = await getUsuario(id);
         if (!user) return "NOT_FOUND_USER";
         // Se genera un nuevo token con expiración de 2 horas
-        const newToken = await generateTokenLimitTime(email, nombres, id);
-        return { nombres, email, token: newToken };
+        const newToken = await generateTokenLimitTime(correo, nombres, id);
+        return { nombres, correo, token: newToken };
     } catch (error) {
         return "TOKEN_NO_VALID";
     }
@@ -27,12 +27,12 @@ export const refreshTokenLimit = async (token: string) => {
  * Función para realizar el login del usuario.
  * Verifica credenciales y genera un token en caso de éxito.
  */
-export const loginUser = async ({ email, password }: Usuario) => {
-    const user = await prisma.usuario.findFirst({ where: { email } });
+export const loginUser = async ({ correo, contraseña }: any) => {
+    const user = await prisma.usuario.findFirst({ where: { correo } });
     if (!user?.id) return;
-    const passwordHash = user.password;
-    const isCorrect = await verified(password, passwordHash);
+    const passwordHash = user.contraseña;
+    const isCorrect = await verified(contraseña, passwordHash);
     if (!isCorrect) return;
-    const token = await generateTokenLimitTime(user.email, user.nombres, user.id);
-    return { nombres: user.nombres, email: user.email, token };
+    const token = await generateTokenLimitTime(user.correo, user.nombres, user.id);
+    return { nombres: user.nombres, correo: user.correo, token };
 };

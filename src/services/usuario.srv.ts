@@ -4,20 +4,20 @@ const prisma = new PrismaClient();
 
 /**
  * Función para registrar un nuevo usuario.
- * Verifica que no exista otro usuario con el mismo email.
+ * Verifica que no exista otro usuario con el mismo correo.
  */
-export const registerUsuario = async ({ email, password, nombres }: Usuario) => {
-    const checkIs = await prisma.usuario.findFirst({ where: { email } });
-    if (checkIs?.email) return "ALREADY EXIST";
-    const passHash = await encrypt(password);
+export const registerUsuario = async ({ correo, contraseña, nombres }: any) => {
+    const checkIs = await prisma.usuario.findFirst({ where: { correo } });
+    if (checkIs?.correo) return "ALREADY EXIST";
+    const passHash = await encrypt(contraseña);
     const response = await prisma.usuario.create({
         select: {
             id: true,
-            email: true,
+            correo: true,
             nombres: true,
             rol: true,
         },
-        data: { email, nombres, password: passHash }
+        data: { correo, nombres, contraseña: passHash }
     });
     return response;
 };
@@ -25,12 +25,12 @@ export const registerUsuario = async ({ email, password, nombres }: Usuario) => 
 /**
  * Función para actualizar un usuario.
  */
-export const updateUsuario = async ({ id, nombres, email, password }: Usuario) => {
+export const updateUsuario = async ({ id, nombres, correo, contraseña }: any) => {
     const checkIs = await prisma.usuario.findFirst({ where: { id } });
     if (!checkIs) return "NO_EXISTE";
     const response = await prisma.usuario.update({
         where: { id },
-        data: { nombres, email, password: await encrypt(password) }
+        data: { nombres, correo, contraseña: await encrypt(contraseña) }
     });
     return response;
 };

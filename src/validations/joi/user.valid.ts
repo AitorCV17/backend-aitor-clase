@@ -4,9 +4,9 @@ import Joi from "joi";
  * Esquema de validación para crear un usuario.
  */
 export const createUserValidation = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+    nombres: Joi.string().required(),
+    correo: Joi.string().email().required(),
+    contraseña: Joi.string().required(),
 });
 
 /**
@@ -14,9 +14,9 @@ export const createUserValidation = Joi.object({
  */
 export const updateUserValidation = Joi.object({
     id: Joi.number().required(),
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string(),
+    nombres: Joi.string().required(),
+    correo: Joi.string().email().required(),
+    contraseña: Joi.string(),
 });
 
 /**

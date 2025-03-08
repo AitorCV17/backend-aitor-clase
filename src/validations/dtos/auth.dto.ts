@@ -5,10 +5,10 @@ import { IsString, IsEmail } from "class-validator";
  */
 export class LoginDto {
     @IsEmail()
-    email: string;
+    correo: string;
 
     @IsString()
-    password: string;
+    contraseña: string;
 }
 
 /**

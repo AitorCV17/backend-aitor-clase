@@ -3,16 +3,17 @@ import { IsEmail, IsNumber, IsPositive, IsString } from "class-validator";
 
 /**
  * DTO para crear un usuario.
+ * Se espera: primero nombres, luego correo y por último contraseña.
  */
 export class CrearUsuarioDto {
-    @IsEmail()
-    email: string;
-
-    @IsString()
-    password: string;
-
     @IsString()
     nombres: string;
+
+    @IsEmail()
+    correo: string;
+
+    @IsString()
+    contraseña: string;
 }
 
 /**
@@ -23,14 +24,14 @@ export class ModificarUsuarioDto {
     @IsPositive()
     id: number;
 
-    @IsEmail()
-    email: string;
-
-    @IsString()
-    password: string;
-
     @IsString()
     nombres: string;
+
+    @IsEmail()
+    correo: string;
+
+    @IsString()
+    contraseña: string;
 }
 
 /**
