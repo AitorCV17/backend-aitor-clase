@@ -1,45 +1,59 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsNumber, IsPositive, IsString } from "class-validator";
+import { IsEmail, IsEnum, IsNumber, IsPositive, IsString } from "class-validator";
+
+/**
+ * Enumeración de roles disponibles
+ */
+export enum Role {
+  REGULAR = "REGULAR",
+  ADMIN = "ADMIN"
+}
 
 /**
  * DTO para crear un usuario.
- * Se espera: primero nombres, luego correo y por último contraseña.
+ * Se espera: nombres, correo, contraseña y rol.
  */
 export class CrearUsuarioDto {
-    @IsString()
-    nombres: string;
+  @IsString()
+  nombres: string;
 
-    @IsEmail()
-    correo: string;
+  @IsEmail()
+  correo: string;
 
-    @IsString()
-    contraseña: string;
+  @IsString()
+  contraseña: string;
+
+  @IsEnum(Role)
+  rol: Role; // Se debe enviar "REGULAR" o "ADMIN"
 }
 
 /**
  * DTO para modificar un usuario.
  */
 export class ModificarUsuarioDto {
-    @IsNumber()
-    @IsPositive()
-    id: number;
+  @IsNumber()
+  @IsPositive()
+  id: number;
 
-    @IsString()
-    nombres: string;
+  @IsString()
+  nombres: string;
 
-    @IsEmail()
-    correo: string;
+  @IsEmail()
+  correo: string;
 
-    @IsString()
-    contraseña: string;
+  @IsString()
+  contraseña: string;
+
+  @IsEnum(Role)
+  rol: Role; // Se incluye rol para actualizarlo
 }
 
 /**
  * DTO para obtener un usuario por id.
  */
 export class GetUsuarioDto {
-    @IsNumber()
-    @IsPositive()
-    @Type(() => Number)
-    id: number;
+  @IsNumber()
+  @IsPositive()
+  @Type(() => Number)
+  id: number;
 }

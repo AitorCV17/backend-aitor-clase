@@ -17,7 +17,7 @@ export const refreshTokenLimit = async (token: string) => {
         if (!user) return "NOT_FOUND_USER";
         // Se genera un nuevo token con expiración de 2 horas
         const newToken = await generateTokenLimitTime(correo, nombres, id);
-        return { nombres, correo, token: newToken };
+        return { nombres, correo, token: newToken, tipoUsuario: [user.rol] };
     } catch (error) {
         return "TOKEN_NO_VALID";
     }
@@ -34,5 +34,5 @@ export const loginUser = async ({ correo, contraseña }: any) => {
     const isCorrect = await verified(contraseña, passwordHash);
     if (!isCorrect) return;
     const token = await generateTokenLimitTime(user.correo, user.nombres, user.id);
-    return { nombres: user.nombres, correo: user.correo, token };
+    return { nombres: user.nombres, correo: user.correo, token, tipoUsuario: [user.rol] };
 };
